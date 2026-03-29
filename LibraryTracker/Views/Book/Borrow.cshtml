@@ -1,0 +1,19 @@
+@model LibraryTracker.Models.Borrower
+@{
+    ViewData["Title"] = "Add Borrower";
+    var book = (LibraryTracker.Models.Book)ViewBag.Book;
+}
+
+<div class="card" style="max-width: 500px;">
+    <h1>Lend "@book.Title"</h1>
+
+    <form method="post" asp-action="Borrow">
+        <input type="hidden" asp-for="BookId" />
+        <div class="form-group">
+            <label asp-for="Name">Borrower Name</label>
+            <input asp-for="Name" required />
+        </div>
+        <button type="submit" class="btn btn-success">Record Borrow</button>
+        <a asp-controller="Book" asp-action="Details" asp-route-id="@book.Id" class="btn" style="background:#95a5a6;">Cancel</a>
+    </form>
+</div>

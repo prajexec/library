@@ -1,0 +1,48 @@
+@model List<LibraryTracker.Models.Book>
+@{
+    ViewData["Title"] = "All Books";
+}
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Books</h1>
+    <a asp-action="Create" class="btn">+ Add Book</a>
+</div>
+
+<table class="mt-1">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Borrowers</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.Author</td>
+                <td>@book.ISBN</td>
+                <td>
+                    <span class="badge">@book.Borrowers.Count</span>
+                </td>
+                <td>
+                    <div class="actions">
+                        <a asp-action="Details" asp-route-id="@book.Id" class="btn btn-sm">View</a>
+                        <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-sm">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@book.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this book?')">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (!Model.Any())
+{
+    <p class="mt-1" style="color: #888;">No books yet. Add one to get started!</p>
+}

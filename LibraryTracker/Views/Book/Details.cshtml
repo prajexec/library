@@ -1,0 +1,66 @@
+@model LibraryTracker.Models.Book
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="card">
+    <h1>@Model.Title</h1>
+    <p><strong>Author:</strong> @Model.Author</p>
+    <p><strong>ISBN:</strong> @Model.ISBN</p>
+
+    <div class="mt-1">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn">Edit</a>
+        <a asp-action="Borrow" asp-route-id="@Model.Id" class="btn btn-success">+ Add Borrower</a>
+        <a asp-action="Index" class="btn" style="background:#95a5a6;">← Back</a>
+    </div>
+</div>
+
+<h2 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Borrowers</h2>
+
+@if (Model.Borrowers.Any())
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Borrowed On</th>
+                <th>Returned On</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model.Borrowers)
+            {
+                <tr>
+                    <td>@b.Name</td>
+                    <td>@b.BorrowedOn.ToString("MMM dd, yyyy")</td>
+                    <td>@(b.ReturnedOn?.ToString("MMM dd, yyyy") ?? "—")</td>
+                    <td>
+                        @if (b.ReturnedOn == null)
+                        {
+                            <span class="badge badge-warning">Borrowed</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success">Returned</span>
+                        }
+                    </td>
+                    <td>
+                        @if (b.ReturnedOn == null)
+                        {
+                            <form asp-action="Return" asp-route-id="@b.Id" method="post">
+                                <input type="hidden" name="bookId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-sm btn-success">Mark Returned</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p style="color: #888;">No one has borrowed this book yet.</p>
+}
